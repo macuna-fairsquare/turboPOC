@@ -35,4 +35,4 @@ jobs:
             uses: peaceiris/actions-gh-pages@v4
             with:
               github_token: ${{ secrets.GITHUB_TOKEN }}
-              publish_dir: ./apps/storybook/storybook-static # The directory where Storybook builds its static files
+              publish_dir: ./docs # The directory where Storybook builds its static files
