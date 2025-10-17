@@ -7,7 +7,7 @@
     "start": "next start",
     "lint": "eslint",
     "dev": "storybook dev -p 6006",
-    "build-storybook": "storybook build -o ../../docs"
+    "build:storybook": "storybook build"
   },
   "dependencies": {
     "@workspace/ui": "workspace:^",
