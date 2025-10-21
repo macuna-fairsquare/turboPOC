@@ -6,7 +6,7 @@ import { Button } from './button';
  * Displays a button or a component that looks like a button.
  */
 const meta = {
-  title: 'Workspace/ui/TestButton',
+  title: 'Workspace/ui/TestButtonN',
   component: Button,
   tags: ['autodocs'],
   argTypes: {
