@@ -1,0 +1,30 @@
+name: Build
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
+
+jobs:
+  manage-build:
+    runs-on: ubuntu-latest
+    services:
+      docker:
+        image: docker:29.0.0-rc.1-dind
+        options: --privileged
+        ports:
+          - 2375:2375
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker CLI
+        run: |
+          docker version
+
+      - name: Manage Build Docker web
+        run: |
+          manage docker_build web -f ./apps/web/Dockerfile -t web:latest
+
