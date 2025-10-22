@@ -46,7 +46,7 @@ WORKDIR /app
 
 COPY --from=installer /pruned/apps/${TARGET}/.next/standalone ./
 COPY --from=installer /pruned/apps/${TARGET}/.next/static ./apps/${TARGET}/.next/static
-COPY --from=installer /pruned/apps/${TARGET}/public ./apps/${TARGET}/public
+# COPY --from=installer /pruned/apps/${TARGET}/public ./apps/${TARGET}/public
 
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
