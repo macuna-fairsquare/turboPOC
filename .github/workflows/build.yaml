@@ -13,38 +13,10 @@ on:
       - completed
 
 jobs:
-  manage-build:
+  TBD:
     runs-on: ubuntu-latest
-    services:
-      docker:
-        image: docker:29.0.0-rc.1-dind
-        options: --privileged
-        ports:
-          - 2375:2375
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
-
-      # - name: Setup Node.js
-      #   uses: actions/setup-node@v4
-      #   with:
-      #     node-version: 22.18.0
-
-      # - name: Setup pnpm
-      #   uses: pnpm/action-setup@v4
-      #   with:
-      #     version: 9.12.3
-
-      # - name: Install dependencies
-      #   run: pnpm install --frozen-lockfile
-
-      # - name: build project
-      #   run: pnpm build
-
-      - name: Set up Docker CLI
-        run: |
-          docker version
-
-      - name: Manage Build Docker web
-        run: |
-          bash ./manage.sh docker-build web -f ./apps/web/Dockerfile -t web:latest
+        with:
+          fetch-depth: 0
