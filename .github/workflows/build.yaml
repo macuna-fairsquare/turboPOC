@@ -31,4 +31,4 @@ jobs:
 
       - name: Manage Build Docker web
         run: |
-          bash ./manage.sh docker_build web -f ./apps/web/Dockerfile -t web:latest
+          bash ./manage.sh docker-build web -f ./apps/web/Dockerfile -t web:latest
