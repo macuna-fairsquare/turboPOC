@@ -30,7 +30,8 @@ jobs:
 
           - name: Build Storybook
             run: pnpm build:storybook # Or your custom build command
-
+          - name: Add .nojekyll
+            run: echo > ./docs/.nojekyll
           - name: Deploy to GitHub Pages
             uses: peaceiris/actions-gh-pages@v4
             with:
