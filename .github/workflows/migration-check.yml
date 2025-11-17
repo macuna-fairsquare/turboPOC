@@ -15,17 +15,32 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
       - name: Check migration order
         run: |
+          # Fetch the target branch (base of the PR or default to master)
+          git fetch origin ${{ github.base_ref || 'master' }}
+
+          # List migrations in the target branch
+          git checkout origin/${{ github.base_ref || 'master' }}
+          ls | sort > /tmp/migrations_base.txt
+
+          # List migrations in the PR branch (current)
+          git checkout -
           cd Migrations
-          files_sorted=$(ls | sort)
-          files_actual=$(ls)
-          if [ "$files_sorted" != "$files_actual" ]; then
-            echo "Migration files are not in order!"
+          ls | sort > /tmp/migrations_pr.txt
+
+          # Find new migrations in PR
+          comm -13 /tmp/migrations_base.txt /tmp/migrations_pr.txt > /tmp/new_migrations.txt
+
+          # Check if new migrations are appended and sorted
+          cat /tmp/migrations_base.txt /tmp/new_migrations.txt | uniq > /tmp/expected.txt
+          ls | sort > /tmp/actual.txt
+
+          if ! diff /tmp/expected.txt /tmp/actual.txt; then
+            echo "New migration files are not appended in order!"
             echo "Expected order:"
-            echo "$files_sorted"
+            cat /tmp/expected.txt
             echo "Actual order:"
-            echo "$files_actual"
+            cat /tmp/actual.txt
             exit 1
           fi
