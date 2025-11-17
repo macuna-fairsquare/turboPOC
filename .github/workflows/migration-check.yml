@@ -2,7 +2,7 @@ name: Check Migration Order
 
 on:
   push:
-    branches: [master]
+    branches: [dev ,master]
     paths:
       - 'Migrations/**'
   pull_request:
