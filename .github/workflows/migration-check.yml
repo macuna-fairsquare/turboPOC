@@ -18,13 +18,14 @@ jobs:
 
       - name: Check migration order
         run: |
-          files=$(ls Migrations | sort)
-          actual=$(ls Migrations)
-          if [ "$files" != "$actual" ]; then
+          cd Migrations
+          files_sorted=$(ls | sort)
+          files_actual=$(ls)
+          if [ "$files_sorted" != "$files_actual" ]; then
             echo "Migration files are not in order!"
             echo "Expected order:"
-            echo "$files"
+            echo "$files_sorted"
             echo "Actual order:"
-            echo "$actual"
+            echo "$files_actual"
             exit 1
           fi
