@@ -17,11 +17,11 @@ jobs:
         uses: actions/checkout@v4
       - name: Check migration order
         run: |
-          # Fetch the target branch (base of the PR or default to master)
-          git fetch origin ${{ github.base_ref || 'master' }}
+          # Fetch the target branch (base of the PR or default to dev)
+          git fetch origin ${{ github.base_ref || 'dev' }}
 
           # List migrations in the target branch
-          git checkout origin/${{ github.base_ref || 'master' }}
+          git checkout origin/${{ github.base_ref || 'dev' }}
           cd Migrations
           ls | sort > /tmp/migrations_base.txt
 
