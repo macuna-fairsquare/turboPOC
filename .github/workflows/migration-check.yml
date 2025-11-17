@@ -1,0 +1,30 @@
+name: Check Migration Order
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'Migrations/**'
+  pull_request:
+    paths:
+      - 'Migrations/**'
+
+jobs:
+  check-order:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check migration order
+        run: |
+          files=$(ls Migrations | sort)
+          actual=$(ls Migrations)
+          if [ "$files" != "$actual" ]; then
+            echo "Migration files are not in order!"
+            echo "Expected order:"
+            echo "$files"
+            echo "Actual order:"
+            echo "$actual"
+            exit 1
+          fi
