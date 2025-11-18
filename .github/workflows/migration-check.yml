@@ -46,7 +46,7 @@ jobs:
 
           # Check if new migrations are appended and sorted
           cat /tmp/migrations_base.txt /tmp/migrations_pr.txt | uniq > /tmp/expected.txt
-          ls | sort > /tmp/actual.txt
+          ls Migrations | sort > /tmp/actual.txt
 
           if ! diff /tmp/expected.txt /tmp/actual.txt; then
             echo "New migration files are not appended in order!"
