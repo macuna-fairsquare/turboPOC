@@ -1,10 +1,6 @@
 name: Check Migration Order
 
 on:
-  push:
-    branches: [dev ,master]
-    paths:
-      - 'Migrations/**'
   pull_request:
     paths:
       - 'Migrations/**'
@@ -17,6 +13,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Check migration order
         run: |
+            echo "Checking migration order..." from ${{ github.base_ref }} to ${{ github.head_ref }}
           # Fetch the target branch (base of the PR or default to dev)
           git fetch origin ${{ github.base_ref || 'dev' }}
 
