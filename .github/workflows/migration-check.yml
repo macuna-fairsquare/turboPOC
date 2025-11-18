@@ -31,8 +31,7 @@ jobs:
           fi
 
           # List migrations in the PR branch (current)
-          git checkout ${{ github.head_ref }}
-          ls
+          git checkout -
           if [ -d Migrations ]; then
             ls Migrations | sort > /tmp/migrations_pr.txt
           else
