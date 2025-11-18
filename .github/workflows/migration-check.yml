@@ -23,7 +23,6 @@ jobs:
 
           # List migrations in the target branch
           git checkout origin/${{ github.base_ref }}
-          ls
           if [ -d Migrations ]; then
             cd Migrations
             ls | sort > /tmp/migrations_base.txt
