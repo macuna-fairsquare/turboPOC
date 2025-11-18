@@ -25,7 +25,7 @@ jobs:
           git checkout origin/${{ github.base_ref }}
           if [ -d Migrations ]; then
             cd Migrations
-            ls > /tmp/migrations_base.txt
+            ls | sort > /tmp/migrations_base.txt
             cd ..
           else
             touch /tmp/migrations_base.txt
