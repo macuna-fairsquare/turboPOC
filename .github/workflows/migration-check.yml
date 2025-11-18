@@ -44,8 +44,10 @@ jobs:
           # Find new migrations in PR
           comm -13 /tmp/migrations_base.txt /tmp/migrations_pr.txt > /tmp/new_migrations.txt
 
-          # Check if new migrations are appended and sorted
-          cat /tmp/migrations_base.txt /tmp/migrations_pr.txt | uniq > /tmp/expected.txt
+          # Build expected order: base migrations + new migrations (sorted)
+          cat /tmp/migrations_base.txt /tmp/new_migrations.txt > /tmp/expected.txt
+
+          # Get actual order in PR branch
           ls Migrations | sort > /tmp/actual.txt
 
           if ! diff /tmp/expected.txt /tmp/actual.txt; then
