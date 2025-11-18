@@ -25,7 +25,7 @@ jobs:
           git checkout origin/${{ github.base_ref }}
           if [ -d Migrations ]; then
             cd Migrations
-            ls | sort > /tmp/migrations_base.txt
+            ls > /tmp/migrations_base.txt
             cd ..
           else
             touch /tmp/migrations_base.txt
@@ -35,7 +35,7 @@ jobs:
           git checkout -
           if [ -d Migrations ]; then
             cd Migrations
-            ls | sort > /tmp/migrations_pr.txt
+            ls > /tmp/migrations_pr.txt
             cd ..
           else
             touch /tmp/migrations_pr.txt
@@ -48,7 +48,7 @@ jobs:
           cat /tmp/migrations_base.txt /tmp/new_migrations.txt > /tmp/expected.txt
 
           # Get actual order in PR branch
-          ls Migrations | sort > /tmp/actual.txt
+          ls Migrations > /tmp/actual.txt
 
           if ! diff /tmp/expected.txt /tmp/actual.txt; then
             echo "New migration files are not appended in order!"
