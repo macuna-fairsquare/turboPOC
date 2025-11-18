@@ -23,21 +23,27 @@ jobs:
 
           # List migrations in the target branch
           git checkout origin/${{ github.base_ref }}
-          git pull origin ${{ github.base_ref }}
-          cd Migrations
-          ls | sort > /tmp/migrations_base.txt
+          if [ -d Migrations ]; then
+            cd Migrations
+            ls Migrations | sort > /tmp/migrations_base.txt
+          else
+            touch /tmp/migrations_base.txt
+          fi
 
           # List migrations in the PR branch (current)
-          git checkout -
-          git pull origin ${{ github.head_ref }}
-          cd Migrations
-          ls | sort > /tmp/migrations_pr.txt
+          git checkout ${{ github.head_ref }}
+          if [ -d Migrations ]; then
+            cd Migrations
+            ls Migrations | sort > /tmp/migrations_pr.txt
+          else
+            touch /tmp/migrations_pr.txt
+          fi
 
           # Find new migrations in PR
           comm -13 /tmp/migrations_base.txt /tmp/migrations_pr.txt > /tmp/new_migrations.txt
 
           # Check if new migrations are appended and sorted
-          cat /tmp/migrations_base.txt /tmp/new_migrations.txt | uniq > /tmp/expected.txt
+          cat /tmp/migrations_base.txt /tmp/migrations_pr.txt | uniq > /tmp/expected.txt
           ls | sort > /tmp/actual.txt
 
           if ! diff /tmp/expected.txt /tmp/actual.txt; then
