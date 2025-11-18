@@ -25,7 +25,6 @@ jobs:
           git checkout origin/${{ github.base_ref }}
           ls
           if [ -d Migrations ]; then
-            cd Migrations
             ls Migrations | sort > /tmp/migrations_base.txt
           else
             touch /tmp/migrations_base.txt
@@ -35,7 +34,6 @@ jobs:
           git checkout ${{ github.head_ref }}
           ls
           if [ -d Migrations ]; then
-            cd Migrations
             ls Migrations | sort > /tmp/migrations_pr.txt
           else
             touch /tmp/migrations_pr.txt
