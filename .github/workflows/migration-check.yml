@@ -25,7 +25,9 @@ jobs:
           git checkout origin/${{ github.base_ref }}
           ls
           if [ -d Migrations ]; then
-            ls Migrations | sort > /tmp/migrations_base.txt
+            cd Migrations
+            ls | sort > /tmp/migrations_base.txt
+            cd ..
           else
             touch /tmp/migrations_base.txt
           fi
@@ -33,7 +35,9 @@ jobs:
           # List migrations in the PR branch (current)
           git checkout -
           if [ -d Migrations ]; then
-            ls Migrations | sort > /tmp/migrations_pr.txt
+            cd Migrations
+            ls | sort > /tmp/migrations_pr.txt
+            cd ..
           else
             touch /tmp/migrations_pr.txt
           fi
