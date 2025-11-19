@@ -51,7 +51,7 @@ jobs:
           ls Migrations > /tmp/actual.txt
 
           if ! diff /tmp/expected.txt /tmp/actual.txt; then
-            echo "New migration files are not appended in order!"
+            echo "New migration files are not in order!"
             echo "New migrations should named after the last migration in the base branch."
             echo "Base branch migrations:"
             cat /tmp/migrations_base.txt
