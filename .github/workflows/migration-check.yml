@@ -55,7 +55,7 @@ jobs:
             echo "New migrations should named after the last migration in the base branch."
             echo "Base branch migrations:"
             cat /tmp/migrations_base.txt
-            echo "Actual order:"
+            echo "Merging branch migrations:"
             cat /tmp/actual.txt
             exit 1
           fi
