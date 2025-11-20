@@ -34,7 +34,7 @@ jobs:
           # List migrations in the PR branch (current)
           git checkout -
           if [ -d "$MIGRATIONS_DIR" ]; then
-            find "$MIGRATIONS_DIR" -type f > /tmp/migrations_pr.txt
+            find "$MIGRATIONS_DIR" -type f | sort > /tmp/migrations_pr.txt
           else
             touch /tmp/migrations_pr.txt
           fi
