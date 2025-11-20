@@ -15,45 +15,60 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Check migration order
+        with:
+          fetch-depth: 0
+          ref: ${{ github.head_ref }}
+      - name: Check migration order (only changed folders)
         run: |
           echo "Checking migration order..." from ${{ github.head_ref }} to ${{ github.base_ref }}
-          # Fetch the target branch (base of the PR or default to dev)
-          git fetch origin ${{ github.base_ref  }}
+          git fetch origin ${{ github.base_ref }}
 
-          MIGRATIONS_DIR="src/components/data-model/src/migrations"
+          MIGRATIONS_ROOT="src/components/data-model/src/migrations"
 
-          # List migrations in the target branch
-          git checkout origin/${{ github.base_ref }}
-          if [ -d "$MIGRATIONS_DIR" ]; then
-            find "$MIGRATIONS_DIR" -type f | sort > /tmp/migrations_base.txt
-          else
-            touch /tmp/migrations_base.txt
+          # Get changed migration files (relative to base branch)
+          CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD -- "$MIGRATIONS_ROOT")
+
+          # Get unique subfolders (relative to MIGRATIONS_ROOT)
+          CHANGED_FOLDERS=$(echo "$CHANGED_FILES" | grep . | xargs -n1 dirname | sort -u)
+
+          if [ -z "$CHANGED_FOLDERS" ]; then
+            echo "No migration folders changed."
+            exit 0
           fi
 
-          # List migrations in the PR branch (current)
-          git checkout -
-          if [ -d "$MIGRATIONS_DIR" ]; then
-            find "$MIGRATIONS_DIR" -type f > /tmp/migrations_pr.txt
-          else
-            touch /tmp/migrations_pr.txt
-          fi
+          for FOLDER in $CHANGED_FOLDERS; do
+            echo "Checking folder: $FOLDER"
+            # List migrations in the target branch
+            git checkout origin/${{ github.base_ref }}
+            if [ -d "$FOLDER" ]; then
+              find "$FOLDER" -type f | sort > /tmp/migrations_base.txt
+            else
+              touch /tmp/migrations_base.txt
+            fi
 
-          # Find new migrations in PR
-          comm -13 /tmp/migrations_base.txt /tmp/migrations_pr.txt > /tmp/new_migrations.txt
+            # List migrations in the PR branch (current)
+            git checkout -
+            if [ -d "$FOLDER" ]; then
+              find "$FOLDER" -type f | sort > /tmp/migrations_pr.txt
+            else
+              touch /tmp/migrations_pr.txt
+            fi
 
-          # Build expected order: base migrations + new migrations (sorted)
-          cat /tmp/migrations_base.txt /tmp/new_migrations.txt > /tmp/expected.txt
+            # Find new migrations in PR
+            comm -13 /tmp/migrations_base.txt /tmp/migrations_pr.txt > /tmp/new_migrations.txt
 
-          # Get actual order in PR branch
-          find "$MIGRATIONS_DIR" -type f > /tmp/actual.txt
+            # Build expected order: base migrations + new migrations (sorted)
+            cat /tmp/migrations_base.txt /tmp/new_migrations.txt > /tmp/expected.txt
 
-          if ! diff /tmp/expected.txt /tmp/actual.txt; then
-            echo "New migration files are not in order!"
-            echo "New migrations should be named after the last migration in the base branch."
-            echo "Base branch migrations:"
-            cat /tmp/migrations_base.txt
-            echo "Merging branch migrations:"
-            cat /tmp/actual.txt
-            exit 1
-          fi
+            # Get actual order in PR branch
+            find "$FOLDER" -type f | sort > /tmp/actual.txt
+
+            if ! diff /tmp/expected.txt /tmp/actual.txt; then
+              echo "New migration files are not in order in $FOLDER!"
+              echo "Base branch migrations:"
+              cat /tmp/migrations_base.txt
+              echo "Merging branch migrations:"
+              cat /tmp/actual.txt
+              exit 1
+            fi
+          done
