@@ -15,6 +15,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.head_ref }}
       - name: Check migration order (only changed folders)
         run: |
           echo "Checking migration order..." from ${{ github.head_ref }} to ${{ github.base_ref }}
