@@ -24,7 +24,7 @@ jobs:
           MIGRATIONS_DIR="src/components/data-model/src/migrations"
 
           # List migrations in the target branch
-          git checkout origin/${{ github.base_ref }}.
+          git checkout origin/${{ github.base_ref }}
           if [ -d "$MIGRATIONS_DIR" ]; then
             find "$MIGRATIONS_DIR" -type f | sort > /tmp/migrations_base.txt
           else
