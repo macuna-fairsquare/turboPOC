@@ -7,7 +7,7 @@ on:
       - dev
       - master
     paths:
-      - 'Migrations/**'
+      - 'src/components/data-model/src/migrations/**'
 
 jobs:
   check-order:
@@ -21,22 +21,20 @@ jobs:
           # Fetch the target branch (base of the PR or default to dev)
           git fetch origin ${{ github.base_ref  }}
 
+          MIGRATIONS_DIR="src/components/data-model/src/migrations"
+
           # List migrations in the target branch
-          git checkout origin/${{ github.base_ref }}
-          if [ -d Migrations ]; then
-            cd Migrations
-            ls | sort > /tmp/migrations_base.txt
-            cd ..
+          git checkout origin/${{ github.base_ref }}.
+          if [ -d "$MIGRATIONS_DIR" ]; then
+            find "$MIGRATIONS_DIR" -type f | sort > /tmp/migrations_base.txt
           else
             touch /tmp/migrations_base.txt
           fi
 
           # List migrations in the PR branch (current)
           git checkout -
-          if [ -d Migrations ]; then
-            cd Migrations
-            ls > /tmp/migrations_pr.txt
-            cd ..
+          if [ -d "$MIGRATIONS_DIR" ]; then
+            find "$MIGRATIONS_DIR" -type f > /tmp/migrations_pr.txt
           else
             touch /tmp/migrations_pr.txt
           fi
@@ -48,11 +46,11 @@ jobs:
           cat /tmp/migrations_base.txt /tmp/new_migrations.txt > /tmp/expected.txt
 
           # Get actual order in PR branch
-          ls Migrations > /tmp/actual.txt
+          find "$MIGRATIONS_DIR" -type f > /tmp/actual.txt
 
           if ! diff /tmp/expected.txt /tmp/actual.txt; then
             echo "New migration files are not in order!"
-            echo "New migrations should named after the last migration in the base branch."
+            echo "New migrations should be named after the last migration in the base branch."
             echo "Base branch migrations:"
             cat /tmp/migrations_base.txt
             echo "Merging branch migrations:"
