@@ -61,7 +61,7 @@ jobs:
             cat /tmp/migrations_base.txt /tmp/new_migrations.txt > /tmp/expected.txt
 
             # Get actual order in PR branch
-            find "$FOLDER" -type f > /tmp/actual.txt
+            find "$FOLDER" -type f | sort > /tmp/actual.txt
 
             if ! diff /tmp/expected.txt /tmp/actual.txt; then
               echo "New migration files are not in order in $FOLDER!"
