@@ -1,6 +1,20 @@
 name: Check Migration Order
 
 on:
+  pull_request_review:
+    branches:
+      - main
+      - dev
+      - master
+    paths:
+      - 'src/components/data-model/src/migrations/**'
+  push:
+    branches:
+      - main
+      - dev
+      - master
+    paths:
+      - 'src/components/data-model/src/migrations/**'
   pull_request:
     branches:
       - main
