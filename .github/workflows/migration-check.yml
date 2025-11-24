@@ -22,6 +22,7 @@ on:
       - master
     paths:
       - 'src/components/data-model/src/migrations/**'
+    types: [opened, synchronize, ready_for_review, closed]
 
 jobs:
   check-order:
